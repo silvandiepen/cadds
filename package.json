@@ -1,26 +1,40 @@
 {
-  "name": "cadds",
-  "version": "0.0.2",
-  "description": "Config and Data Driven Styling",
-  "main": "src/index.scss",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silvandiepen/cadds.git"
-  },
-  "keywords": [
-    "Styling",
-    "Config",
-    "Custom",
-    "Properties",
-    "Theming"
-  ],
-  "author": "Sil van Diepen",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/silvandiepen/cadds/issues"
-  },
-  "homepage": "https://github.com/silvandiepen/cadds#readme"
+	"name": "cadds",
+	"version": "0.0.2",
+	"description": "Config and Data Driven Styling",
+	"main": "src/index.scss",
+	"scripts": {
+		"build:module": "sass src/index.scss dist/build.css",
+		"build:example": "sass src/example/main.scss dist/example/main.css --style compressed && csso -i dist/example/main.css -o dist/example/main.dist.css",
+		"build:theme": "sass src/example/secondary_theme.scss dist/example/theme.css",
+		"build:theme_import": "sass src/example/secondary_theme_import.scss dist/example/theme-import.css",
+		"build": "npm run build:module && npm run build:example && npm run build:theme && npm run build:theme_import",
+		"pre": "npm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/silvandiepen/cadds.git"
+	},
+	"keywords": [
+		"Styling",
+		"Config",
+		"Custom",
+		"Properties",
+		"Theming"
+	],
+	"author": "Sil van Diepen",
+	"license": "MIT",
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run pre"
+		}
+	},
+	"bugs": {
+		"url": "https://github.com/silvandiepen/cadds/issues"
+	},
+	"homepage": "https://github.com/silvandiepen/cadds#readme",
+	"dependencies": {
+		"husky": "^4.2.5",
+		"sass": "^1.26.10"
+	}
 }

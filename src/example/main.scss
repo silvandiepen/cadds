@@ -1,0 +1,31 @@
+@use '../data/base' with (
+	$space: 1.5em
+);
+
+@use '../data/colors';
+
+@use '../data/media-queries' with (
+	$small: "screen and (max-width: 100px)"
+ );
+
+$cadds: (
+	".header": (
+		"border": 1px solid colors.$primary,
+		"background": colors.$secondary,
+		"padding": base.$space,
+		"padding--hover": 2em,
+		"padding--mobile": 3em,
+		"padding--before": 3em,
+	),
+	".main": (
+		"padding": base.$space,
+		"background": white,
+	),
+	".footer": (
+		"background": black,
+		"color": white,
+		"padding": base.$space,
+	),
+);
+
+@import "../";

@@ -1,13 +1,7 @@
 @use "sass:list";
 
-$pseudo-elements: (
-	"after",
-	"before",
-	"first-letter",
-	"first-line",
-	"selection"
-);
-$pseudo-classes: (
+$elements: ("after", "before", "first-letter", "first-line", "selection");
+$classes: (
 	"active",
 	"checked",
 	"disabled",
@@ -35,7 +29,7 @@ $pseudo-classes: (
 	"valid",
 	"visited"
 );
-$pseudo-classes-arg: (
+$class-arg: (
 	"lang",
 	"not",
 	"nth-child",
@@ -44,5 +38,5 @@ $pseudo-classes-arg: (
 	"nth-of-type"
 );
 
-$pseudo: list.join($pseudo-elements, $pseudo-classes);
-$pseudo: list.join($pseudo, $pseudo-classes-arg);
+$all: list.join($elements, $classes);
+$all: list.join($all, $class-arg);

@@ -1,0 +1,6 @@
+@use '../data/colors' with (
+	$primary: green,
+	$secondary: purple
+);
+
+@import "main";
