@@ -1,6 +1,6 @@
 {
 	"name": "cadds",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Config and Data Driven Styling",
 	"main": "src/index.scss",
 	"scripts": {
