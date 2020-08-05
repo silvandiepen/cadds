@@ -6,6 +6,8 @@ CaDDS or Config and Data Driven Styling is a styling methodology based on stylin
 ### Why?
 The idea is to create a config file which holds all the styling for a project. By including this file into another with some different defaults, you can completely alter the outcome and create themes.
 
+The idea is to create css which can be altered as much as possible and be able to build that css just using a config file. 
+
 
 ## How?
 
@@ -26,7 +28,7 @@ $base-space: 1em !default;
 
 $cadds: (
   'header__border': 1px solid $color-primary,
-  'header__background: $color-secondary,
+  'header__background': $color-secondary,
   'header__padding': $base-space,
   'main__padding': $base-space,
   'main__background': white,
