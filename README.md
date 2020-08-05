@@ -13,7 +13,9 @@ The idea is to create css which can be altered as much as possible and be able t
 
 To use the CADDS styling you need to make sure your project has a few things in stock; Knowledge of the CSS cascade, BEM and install CaDDS and Sass in your project.
 
-```npm install cadds sass```
+```
+npm install cadds sass
+```
 
 
 ### Basic example
