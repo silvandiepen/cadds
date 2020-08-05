@@ -15,10 +15,6 @@
   padding: 3em;
 }
 
-.header ~ .test {
-  padding: 10px;
-}
-
 .main {
   padding: 1.5em;
   background: white;

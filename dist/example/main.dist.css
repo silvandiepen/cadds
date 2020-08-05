@@ -1,1 +1,1 @@
-.header{border:1px solid red;background:#00f;padding:1.5em}.header:hover{padding:2em}@media screen and (max-width:100px){.header{padding:3em}}.header::before{padding:3em}.header~.test{padding:10px}.main{padding:1.5em;background:#fff}.footer{background:#000;color:#fff;padding:1.5em}
+.header{border:1px solid red;background:#00f;padding:1.5em}.header:hover{padding:2em}@media screen and (max-width:100px){.header{padding:3em}}.header::before{padding:3em}.main{padding:1.5em;background:#fff}.footer{background:#000;color:#fff;padding:1.5em}
