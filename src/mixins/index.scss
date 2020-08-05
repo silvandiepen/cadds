@@ -1,0 +1,101 @@
+@import "../data/pseudo";
+@import "helpers";
+
+// Function: cadds-setting-exists
+// Check if a Key exists in the settings
+@function cadds-setting-exists($setting) {
+	@if map-get($cadds-settings, $setting) {
+		@return true;
+	}
+	@return false;
+}
+// Function: cadds
+// Get the value of a certain key in the settings and convert it to
+// a custom property with default value or if empty just the custom property.
+@function cadds($setting, $prop: "", $modifier: "") {
+	@if $prop != "" {
+		$prop: "__#{$prop}";
+	}
+	@if $modifier != "" {
+		$modifier: "--#{$prop}";
+	}
+
+	$key: #{$setting}#{$prop}#{$modifier};
+
+	@if cadds-setting-exists($key) {
+		$value: map-get($cadds-settings, $key);
+		@if $value == "empty" {
+			$value: "''";
+		}
+		@if (str-index($key, "font-family")) {
+			@return #{$value};
+		} @else {
+			@return unquote("var(--#{$propPrefix}#{$key},#{$value})");
+		}
+	}
+	@return unquote("var(--#{$propPrefix}#{$setting})");
+}
+
+// Mixin cadds-Auto
+// Automatically find all properties link to a key and use them. @mixin cadds-auto(
+@mixin cadds($setting, $modifier: "") {
+	@each $setting-key, $setting-value in $cadds-settings {
+		@if str-index($setting-key, $setting + "__") == 1 {
+			$prop: get-prop($setting-key);
+			$mod: get-modifier($setting-key);
+
+			@if $mod == null {
+				#{$prop}: cadds($setting-key);
+			} @else if $modifier != "" {
+				#{$prop}: cadds($setting-key, $prop, $modifier);
+			}
+			@if $prop !=
+				null and
+				$mod !=
+				null or
+				$prop !=
+				"" and
+				$setting-value and
+				$mod !=
+				null
+			{
+				// If the modifier isn't set. Or $mod is nothing, just set the value;
+
+				// Otherwise, automatically create the css.
+				// If the pseudo is just a single, automatically apply it.
+				@if index($pseudo, $mod) {
+					&:#{$mod} {
+						#{$prop}: cadds($setting-key);
+					}
+				}
+				// If the modifier has a dash and is a pseudo element/class
+				@else if
+					str-index($mod, "-") and
+					index($pseudo, nth(str-split($mod, "-"), 1))
+				{
+					$mods: "";
+					@each $m in str-split($mod, "-") {
+						$mods: "#{$mods}:#{$m}";
+					}
+					&#{$mods} {
+						#{$prop}: cadds($setting-key);
+					}
+				} @else {
+					@if $mod == "mobile" {
+						@media #{$small} {
+							#{$prop}: cadds($setting-key);
+						}
+					} @else if $mod == "desktop" {
+						@media #{$medium} {
+							#{$prop}: cadds($setting-key);
+						}
+					} @else {
+						&--#{$mod} {
+							#{$prop}: cadds($setting-key);
+						}
+					}
+				}
+			}
+		}
+	}
+}

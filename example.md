@@ -3,6 +3,7 @@
 A very simpole cadds styling file;
 
 **main.scss**
+
 ```scss
 $color-primary: red !default;
 $color-secondary: blue !default;
@@ -22,6 +23,7 @@ $cadds: (
 
 will output;
 **style.css**
+
 ```css
 .header{
   border: var(--header__border,1px solid var(--color-primary,red));
@@ -33,12 +35,14 @@ will output;
 }
 footer{
   padding: var(--footer__padding,1em);
-  background: var(--footer__background,black;
+  background: var(--footer__background,black);
   color: var(--footer__color,white);
 }
+
 ```
 
 But if you want to make an alternative theme file with the same css but different values;
+
 ```scss
 $color-primary: brown;
 $color-secondary: green;
@@ -57,7 +61,7 @@ will output;
 }
 footer{
   padding: var(--footer__padding,1em);
-  background: var(--footer__background,black;
+  background: var(--footer__background,black);
   color: var(--footer__color,white);
 }
 ```
@@ -69,6 +73,5 @@ As you can see, all output automatically have defined custom properties, which m
   --color-primary: brown;
   --color-secondary: green;
 }
-@import 'style.css';
+@import 'style.css'
 ```
-

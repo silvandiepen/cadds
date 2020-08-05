@@ -1,0 +1,41 @@
+// Is the modifier correct?
+@function modifier-is($setting, $modifier) {
+	@if $modifier == "" {
+		@if str-index($setting, "--") {
+			@return false;
+		}
+		@return true;
+	}
+	@if str-index($setting, "--#{$modifier}") {
+		@return true;
+	} @else {
+		@return false;
+	}
+}
+// Get the property from a string.
+@function get-prop($setting) {
+	@if str-index($setting, "__") {
+		$start: str-index($setting, "__");
+		$end: str-length($setting);
+		@if str-index($setting, "--") {
+			$end: str-index($setting, "--") - 1;
+		}
+		@return str-slice($setting, $start + 2, $end);
+	} @else {
+		@return null;
+	}
+}
+@function get-modifier($setting) {
+	@if str-index($setting, "--") {
+		$start: str-index($setting, "--");
+		$end: str-length($setting);
+		@return str-slice($setting, $start + 2, $end);
+	} @else {
+		@return null;
+	}
+}
+@mixin setCustomProperty($setting) {
+	:root {
+		--#{$propPrefix}#{$setting}: #{map-get($cadds, $setting)};
+	}
+}
