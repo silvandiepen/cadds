@@ -1,0 +1,134 @@
+@use "sass:map";
+
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace +
+			str-replace(
+				str-slice($string, $index + str-length($search)),
+				$search,
+				$replace
+			);
+	}
+
+	@return $string;
+}
+//  functions
+
+@function to-lightness($color, $to) {
+	// @return black;
+	@if $to < 0% {
+		@debug "#{$to} is too low";
+	}
+	@if type-of($color) == "string" {
+		$color: get(str-replace($color, "c-", ""));
+	}
+	@if type-of($color) == "string" {
+		@warn "#{$color} is not of type color";
+		@return rgba(0, 0, 0);
+	}
+	@return hsla(hue($color), saturation($color), $to, alpha($color));
+}
+
+// Get a color
+@function get($name, $opacity: 1) {
+	$colors: map-merge($-colors-base, $-colors-additional);
+	@if map-has-key($colors, to-lower-case($name)) {
+		@return rgba(map-get($colors, to-lower-case($name)), $opacity);
+	} @else {
+		@warn '#{$name} does not exist';
+		@return null;
+	}
+}
+
+@function contra($color, $black: black, $white: white) {
+	@return black;
+	@warn 'dont forget to fix me';
+	@if type-of($color) == "string" {
+		$color: get(str-replace($color, "c-", ""));
+	}
+	@if type-of($color) == "string" {
+		@warn "#{$color} is not of type color";
+		@return rgba(0, 0, 0);
+	}
+	@if lightness($color) < 55 {
+		@return $white;
+	} @else {
+		@return $black;
+	}
+}
+
+// Set Colors
+
+$colors: () !default;
+$-colors-base: (
+	primary: rgb(0, 204, 255),
+	secondary: rgb(206, 190, 50),
+	tertiary: rgb(107, 0, 128),
+	foreground: black,
+	background: white,
+	error: red,
+	warning: orange,
+	danger: red,
+	tip: blue,
+	success: green,
+	info: purple,
+);
+
+$-colors-contra: (
+	primary_contra: contra(map-get($-colors-base, "primary")),
+	secondary_contra: contra(map-get($-colors-base, "secondary")),
+);
+
+// Set the accent color
+$-foreground: map-get($-colors-base, "foreground");
+$-background: map-get($-colors-base, "background");
+
+// Set the modus
+$mode: "light";
+
+$off: 5;
+$accent: 10;
+$mid: 50;
+$step: 5;
+
+$-colors-additional: ();
+$colors: $-colors-base;
+
+@each $key, $value in $-colors-base {
+	// @debug "key:#{$key} :::  value:#{$off + lightness($value)}";
+
+	$currentStep: 0;
+	@while $currentStep < 100 {
+		$currentStep: $currentStep + $step;
+		$off: $currentStep;
+		@if lightness(map-get($-colors-base, "background")) >
+			lightness(map-get($-colors-base, "foreground"))
+		{
+			$off: $currentStep * -1;
+		}
+		$-colors-additional: map-merge(
+			$-colors-additional,
+			(
+				"#{$key}-accent-#{$currentStep}":
+					mix(map-get($-colors-base, background), $value, $currentStep),
+				"#{$key}-shade-#{$currentStep}": to-lightness($value, $currentStep),
+			)
+		);
+	}
+}
+
+// Configure colors
+@mixin set($setColors: ()) {
+	@if length($setColors) > 0 {
+		@each $color-key, $color-value in $setColors {
+			$colors: map-merge(
+				$colors,
+				(
+					"#{$color-key}": $color-value,
+				)
+			);
+		}
+	}
+}

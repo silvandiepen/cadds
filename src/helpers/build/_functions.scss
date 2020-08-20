@@ -1,10 +1,10 @@
-@use "../data/pseudo" as pseudo;
+@use "../../data/pseudo" as pseudo;
 
 @function get-dots($modifier) {
 	@if index(pseudo.$all, $modifier) and index(pseudo.$elements, $modifier) {
-		@return "::";
+		@return "::#{$modifier}";
 	} @else if index(pseudo.$all, $modifier) {
-		@return ":";
+		@return ":#{$modifier}";
 	} @else {
 		@warn "#{$modifier} is not a pseudo element";
 	}
@@ -49,10 +49,5 @@
 		@return str-slice($setting, $start + 2, $end);
 	} @else {
 		@return null;
-	}
-}
-@mixin setCustomProperty($setting) {
-	:root {
-		--#{$propPrefix}#{$setting}: #{map-get($cadds, $setting)};
 	}
 }

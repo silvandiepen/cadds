@@ -1,3 +1,51 @@
-$small: "screen and (max-width: 750px)" !default;
-$medium: "screen and (min-width: 750px) and (max-width: 1440px)" !default;
-$large: "screen and (min-width: 1440px)" !default;
+// Media Queries
+
+$small-size: 750px !default;
+$medium-size: 1440px !default;
+
+$small: "screen and (max-width: #{$small-size})" !default;
+$mobile: "screen and (max-width: #{$small-size})" !default;
+$medium: "screen and (min-width: #{$small-size}) and (max-width: #{$medium-size})" !default;
+$desktop: "screen and (min-width: #{$small-size})" !default;
+$large: "screen and (min-width: #{$medium-size})" !default;
+
+$mqs: ();
+$-mq: (
+	small: $small,
+	medium: $medium,
+	large: $large,
+	mobile: $small,
+	tablet: $medium,
+	desktop: $desktop,
+);
+
+$mqs: map-merge($mqs, $-mq);
+
+// Set alternative values
+@mixin set($setMq: ()) {
+	@if length($setMq) > 0 {
+		@each $mq-key, $mq-value in $setMq {
+			$mqs: map-merge(
+				$mqs,
+				(
+					"#{$mq-key}": $mq-value,
+				)
+			);
+		}
+	}
+}
+
+// Get a color
+@function get($name) {
+	@if map-has-key($mqs, to-lower-case($name)) {
+		$value: map-get($mqs, to-lower-case($name));
+
+		@if type-of($value) == "string" {
+			$value: unquote($value);
+		}
+		@return $value;
+	} @else {
+		@warn '#{$name} does not exist';
+		@return "screen and (min-width: 0px)";
+	}
+}

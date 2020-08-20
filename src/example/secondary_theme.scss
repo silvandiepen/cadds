@@ -1,6 +1,9 @@
-@use '../data/colors' with (
-	$primary: green,
-	$secondary: purple
-);
+@use '../helpers/color';
 
 @import "main";
+
+@include color.set(
+	(
+		primary: red,
+	)
+);

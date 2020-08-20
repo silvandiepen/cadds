@@ -1,0 +1,7 @@
+@function list-has-value($list, $value) {
+	@if index($list, $value) {
+		@return true;
+	} @else {
+		@return false;
+	}
+}

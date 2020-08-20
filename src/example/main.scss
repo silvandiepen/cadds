@@ -1,30 +1,35 @@
-@use '../data/base' with (
-	$space: 1.5em
+@use '../data/base';
+@use '../data/media-queries' as mq;
+@use "../helpers";
+
+@include base.set(
+	(
+		space: 1.5em,
+	)
 );
-
-@use '../data/colors';
-
-@use '../data/media-queries' with (
-	$small: "screen and (max-width: 100px)"
- );
+@include mq.set(
+	(
+		small: 640px,
+	)
+);
 
 $cadds: (
 	".header": (
-		"border": 1px solid colors.$primary,
-		"background": colors.$secondary,
-		"padding": base.$space,
+		"border": 1px solid c-primary,
+		"background": c-secondary,
+		"padding": v-space,
 		"padding--hover": 2em,
 		"padding--mobile": 3em,
 		"padding--before": 3em,
 	),
 	".main": (
-		"padding": base.$space,
+		"padding": v-space,
 		"background": white,
 	),
 	".footer": (
 		"background": black,
 		"color": white,
-		"padding": base.$space,
+		"padding": v-space,
 	),
 );
 

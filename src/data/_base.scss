@@ -1,1 +1,105 @@
-$space: 1em !default;
+// Base
+$-base: (
+	max-width: 960px,
+	space: 1.5rem,
+	line-height: 1.75,
+);
+// Animation
+$-base-animation: (
+	transition-time: 0.3s,
+	transition-bezier: ease-in-out,
+);
+// Borders
+$-base-border: (
+	border-color: red,
+	border-width: 1px,
+	border: 1px solid rgba(0, 0, 0, 0.1),
+	border-radius: 0.3em,
+);
+// Typography
+$-base-fonts: (
+	// typography
+		font-family:
+		"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', 'sans-serif'",
+	font-family-headings:
+		"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', 'sans-serif'",
+	font-size: 1em,
+	font-family-code:
+		"Menlo, 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace"
+);
+
+// Combine all the maps
+$base: ();
+$base: map-merge($base, $-base);
+$base: map-merge($base, $-base-animation);
+$base: map-merge($base, $-base-border);
+$base: map-merge($base, $-base-fonts);
+
+// Set combined values
+$base: map-merge(
+	$base,
+	(
+		"transition": map-get($base, "transition-time")
+			map-get($base, "transition-bezier"),
+	)
+);
+
+// Set alternative values
+@mixin set($setBase: ()) {
+	@if length($setBase) > 0 {
+		@each $base-key, $base-value in $setBase {
+			$base: map-merge(
+				$base,
+				(
+					"#{$base-key}": $base-value,
+				)
+			);
+		}
+	}
+}
+
+@function str-replace-all($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace +
+			str-replace-all(
+				str-slice($string, $index + str-length($search)),
+				$search,
+				$replace
+			);
+	}
+
+	@return $string;
+}
+
+// Get a color
+@function get($name) {
+	@if map-has-key($base, to-lower-case($name)) {
+		$value: map-get($base, to-lower-case($name));
+
+		@if type-of($value) == "string" {
+			$value: unquote($value);
+		}
+		@return unquote("var(--#{$name},#{$value})");
+		// @return $value;
+	} @else {
+		@each $key, $value in $base {
+			@if $value != null and str-index($name, $key) != null {
+				$name: str-replace-all(
+					$name,
+					$key,
+					unquote("var(--#{$key},#{$value})")
+				);
+			}
+			@if $value != null and str-index($name, "v-#{$key}") != null {
+				$name: str-replace-all(
+					$name,
+					"v-#{$key}",
+					unquote("var(--#{$key},#{$value})")
+				);
+			}
+		}
+		@return $name;
+	}
+}

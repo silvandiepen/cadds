@@ -1,0 +1,93 @@
+@use "../../data/media-queries" as mq;
+@use "../../data/base" as base;
+@use "../color" as color;
+@use "../../data/pseudo";
+@use "sass:meta";
+
+@mixin builder($settings, $mq: null) {
+	@if $mq {
+		@media #{mq.get($mq)} {
+			@each $selector, $values in $settings {
+				#{$selector} {
+					@include build-properties($values, $mq);
+				}
+			}
+		}
+	} @else {
+		@each $selector, $values in $settings {
+			#{$selector} {
+				@include build-properties($values, $mq);
+			}
+		}
+	}
+}
+
+@mixin build-properties($values, $mq: null) {
+	@each $key, $value in $values {
+		$modifier: get-modifier($key);
+		$property: get-prop($key);
+
+		@if type-of($value) == "string" and str-index($value, "v-") != null {
+			$value: base.get(unquote(str-replace($value, "v-", "")));
+		} @else if type-of($value) == "list" {
+			$newlist: ();
+			@each $v in $value {
+				@if type-of($v) == "string" and str-index($v, "v-") != null {
+					$v: base.get(unquote(str-replace($v, "v-", "")));
+				}
+				$newlist: append($newlist, $v);
+			}
+			$value: $newlist;
+		}
+
+		@if type-of($value) == "string" and str-index($value, "c-") != null {
+			$value: color.get(unquote(str-replace($value, "c-", "")));
+		}
+		@if type-of($value) == "string" and $key != "content" {
+			$value: unquote($value);
+		}
+
+		// Add pseudo classes
+		@if index(pseudo.$all, $property) != null {
+			&#{get-dots($property)} {
+				@if type-of($value) != map {
+					@debug "#{$value} is not a map but a #{type-of($value)}";
+				}
+				@include build-properties($value);
+			}
+		}
+
+		// Add sub elements based on Modifiers
+		@else if $modifier {
+			@if index(pseudo.$all, $modifier) {
+				&#{get-dots($modifier)} {
+					#{$property}: $value;
+				}
+			} @else {
+				@if $modifier == "mobile" or $modifier == "small" {
+					@media #{mq.$small} {
+						#{$property}: $value;
+					}
+				} @else if $modifier == "desktop" {
+					@media #{mq.$desktop} {
+						#{$property}: $value;
+					}
+				} @else if $modifier == "medium" {
+					@media #{mq.$medium} {
+						#{$property}: $value;
+					}
+				} @else if $modifier == "large" {
+					@media #{mq.$large} {
+						#{$property}: $value;
+					}
+				} @else {
+					&--#{$modifier} {
+						#{$property}: $value;
+					}
+				}
+			}
+		} @else {
+			#{$property}: $value;
+		}
+	}
+}
