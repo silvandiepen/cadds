@@ -31,19 +31,6 @@
 	@return hsla(hue($color), saturation($color), $to, alpha($color));
 }
 
-// Get a color
-@function get($name, $opacity: 1) {
-	$colors: map-merge($-colors-base, $-colors-additional);
-	@if map-has-key($colors, to-lower-case($name)) {
-		@return unquote(
-			"var(--#{$name},#{rgba(map-get($colors, to-lower-case($name)), $opacity)})"
-		);
-	} @else {
-		@warn '#{$name} does not exist';
-		@return null;
-	}
-}
-
 @function contra($color, $black: black, $white: white) {
 	@return black;
 	@warn 'dont forget to fix me';
@@ -132,5 +119,19 @@ $colors: $-colors-base;
 				)
 			);
 		}
+	}
+}
+
+// Get a color
+@function get($name, $opacity: 1) {
+	$colors: map-merge($-colors-base, $-colors-additional);
+	@if map-has-key($colors, to-lower-case($name)) {
+		// @return red;
+		@return unquote(
+			"var(--#{$name},#{rgba(map-get($colors, to-lower-case($name)), $opacity)})"
+		);
+	} @else {
+		@warn '#{$name} does not exist';
+		@return null;
 	}
 }
