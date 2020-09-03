@@ -43,7 +43,7 @@
 	}
 }
 @function get-modifier($setting) {
-	@if str-index($setting, "--") {
+	@if str-index($setting, "--") and str-index($setting, "--") > 1 {
 		$start: str-index($setting, "--");
 		$end: str-length($setting);
 		@return str-slice($setting, $start + 2, $end);

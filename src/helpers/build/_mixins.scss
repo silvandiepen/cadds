@@ -47,47 +47,52 @@
 			$value: unquote($value);
 		}
 
-		// Add pseudo classes
-		@if index(pseudo.$all, $property) != null {
-			&#{get-dots($property)} {
-				@if type-of($value) != map {
-					@debug "#{$value} is not a map but a #{type-of($value)}";
+		// Custom property
+		@if str-index($key, "--") == 1 {
+			#{$key}: #{$value};
+		} @else {
+			// Add pseudo classes
+			@if index(pseudo.$all, $property) != null {
+				&#{get-dots($property)} {
+					@if type-of($value) != map {
+						@debug "#{$value} is not a map but a #{type-of($value)}";
+					}
+					@include build-properties($value);
 				}
-				@include build-properties($value);
 			}
-		}
 
-		// Add sub elements based on Modifiers
-		@else if $modifier {
-			@if index(pseudo.$all, $modifier) {
-				&#{get-dots($modifier)} {
-					#{$property}: $value;
-				}
-			} @else {
-				@if $modifier == "mobile" or $modifier == "small" {
-					@media #{mq.$small} {
-						#{$property}: $value;
-					}
-				} @else if $modifier == "desktop" {
-					@media #{mq.$desktop} {
-						#{$property}: $value;
-					}
-				} @else if $modifier == "medium" {
-					@media #{mq.$medium} {
-						#{$property}: $value;
-					}
-				} @else if $modifier == "large" {
-					@media #{mq.$large} {
+			// Add sub elements based on Modifiers
+			@else if $modifier {
+				@if index(pseudo.$all, $modifier) {
+					&#{get-dots($modifier)} {
 						#{$property}: $value;
 					}
 				} @else {
-					&--#{$modifier} {
-						#{$property}: $value;
+					@if $modifier == "mobile" or $modifier == "small" {
+						@media #{mq.$small} {
+							#{$property}: $value;
+						}
+					} @else if $modifier == "desktop" {
+						@media #{mq.$desktop} {
+							#{$property}: $value;
+						}
+					} @else if $modifier == "medium" {
+						@media #{mq.$medium} {
+							#{$property}: $value;
+						}
+					} @else if $modifier == "large" {
+						@media #{mq.$large} {
+							#{$property}: $value;
+						}
+					} @else {
+						&--#{$modifier} {
+							#{$property}: $value;
+						}
 					}
 				}
+			} @else {
+				#{$property}: $value;
 			}
-		} @else {
-			#{$property}: $value;
 		}
 	}
 }

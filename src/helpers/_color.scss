@@ -35,7 +35,9 @@
 @function get($name, $opacity: 1) {
 	$colors: map-merge($-colors-base, $-colors-additional);
 	@if map-has-key($colors, to-lower-case($name)) {
-		@return rgba(map-get($colors, to-lower-case($name)), $opacity);
+		@return unquote(
+			"var(--#{$name},#{rgba(map-get($colors, to-lower-case($name)), $opacity)})"
+		);
 	} @else {
 		@warn '#{$name} does not exist';
 		@return null;
